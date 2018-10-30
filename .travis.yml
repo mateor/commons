@@ -4,23 +4,17 @@
 # cache configured below.
 dist: trusty
 sudo: required
-  addons:
-    apt:
-      packages:
-        - lib32stdc++6
-        - lib32z1
-        - lib32z1-dev
-        - gcc-multilib
-        - python-dev
-        - openssl
-        - libssl-dev
+os: linux
+language: python
+python: "2.7.13"
+
 before_cache:
-    # The `ivydata-*.properties` & root level `*.{properties,xml}` files'
-    # effect on resolution time is in the noise, but they are
-    # re-timestamped in internal comments and fields on each run and this
-    # leads to travis-ci cache thrash.  Kill these files before the cache
-    # check to avoid un-needed cache re-packing and re-upload (a ~100s
-    # operation).
+  # The `ivydata-*.properties` & root level `*.{properties,xml}` files'
+  # effect on resolution time is in the noise, but they are
+  # re-timestamped in internal comments and fields on each run and this
+  # leads to travis-ci cache thrash.  Kill these files before the cache
+  # check to avoid un-needed cache re-packing and re-upload (a ~100s
+  # operation).
   - find $HOME/.ivy2/twitter-commons -type f -name "ivydata-*.properties" -print -delete
   - rm -fv $HOME/.ivy2/twitter-commons/*.{css,properties,xml,xsl}
   # The stats cache contains timestamped reports unused by CI but that
@@ -33,11 +27,17 @@ cache:
     - $HOME/.ivy2/twitter-commons
     - $TRAVIS_BUILD_DIR/.cache
 
-language: python
-python: "2.7.13"
+addons:
+  apt:
+    packages:
+    - lib32stdc++6
+    - lib32z1
+    - lib32z1-dev
+    - gcc-multilib
+    - python-dev
+    - openssl
+    - libssl-dev
 before_install:
-  # Remove bad openjdk6 from trusty image, so
-  # Pants will pick up oraclejdk6 from `packages` above.
   - sudo rm -rf /usr/lib/jvm/java-1.6.0-openjdk-amd64
   - sudo rm -rf /usr/lib/jvm/java-6-openjdk-amd64
   - jdk_switcher use oraclejdk8
@@ -45,4 +45,3 @@ before_install:
 script: |
   java -version
   ./build-support/bin/ci.sh -jbs
-
