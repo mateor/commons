@@ -3,7 +3,7 @@
 # "machines". This is also required in order to use the
 # cache configured below.
 dist: trusty
-sudo: false
+sudo: required
 os: linux
 language: python
 python: "2.7.13"
