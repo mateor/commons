@@ -2,8 +2,18 @@
 # which should provide faster startup times and beefier
 # "machines". This is also required in order to use the
 # cache configured below.
-sudo: false
-
+dist: trusty
+sudo: required
+  addons:
+    apt:
+      packages:
+        - lib32stdc++6
+        - lib32z1
+        - lib32z1-dev
+        - gcc-multilib
+        - python-dev
+        - openssl
+        - libssl-dev
 before_cache:
     # The `ivydata-*.properties` & root level `*.{properties,xml}` files'
     # effect on resolution time is in the noise, but they are
@@ -23,12 +33,16 @@ cache:
     - $HOME/.ivy2/twitter-commons
     - $TRAVIS_BUILD_DIR/.cache
 
-language: java
-
-jdk:
-  - oraclejdk8
+language: python
+python: "2.7.13"
+before_install:
+  # Remove bad openjdk6 from trusty image, so
+  # Pants will pick up oraclejdk6 from `packages` above.
+  - sudo rm -rf /usr/lib/jvm/java-1.6.0-openjdk-amd64
+  - sudo rm -rf /usr/lib/jvm/java-6-openjdk-amd64
+  - jdk_switcher use oraclejdk8
 
 script: |
   java -version
-  ./build-support/bin/ci.sh
+  ./build-support/bin/ci.sh -jbs
 
