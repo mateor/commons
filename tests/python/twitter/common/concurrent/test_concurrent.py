@@ -1,9 +1,6 @@
 import time
 from functools import partial
-try:
-  from Queue import Queue
-except ImportError:
-  from queue import Queue
+from Queue import Empty, Queue
 
 import pytest
 from twitter.common.concurrent import deadline, defer, Timeout
