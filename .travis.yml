@@ -3,7 +3,7 @@
 # "machines". This is also required in order to use the
 # cache configured below.
 dist: trusty
-sudo: required
+sudo: false
 os: linux
 language: python
 python: "2.7.13"
@@ -30,18 +30,12 @@ cache:
 addons:
   apt:
     packages:
-    - lib32stdc++6
-    - lib32z1
-    - lib32z1-dev
-    - gcc-multilib
     - python-dev
     - openssl
     - libssl-dev
 before_install:
-  - sudo rm -rf /usr/lib/jvm/java-1.6.0-openjdk-amd64
-  - sudo rm -rf /usr/lib/jvm/java-6-openjdk-amd64
   - jdk_switcher use oraclejdk8
 
 script: |
   java -version
-  ./build-support/bin/ci.sh -jbs
+  ./build-support/bin/ci.sh
